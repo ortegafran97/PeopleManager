@@ -2,6 +2,7 @@ package com.ortegafran.peoplemanager.Services;
 
 import com.ortegafran.peoplemanager.Model.Entities.Person;
 import com.ortegafran.peoplemanager.Model.Repositories.PersonRepository;
+import org.hibernate.type.UUIDCharType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,16 +19,20 @@ public class PersonService {
         this.personRepository = personRepository;
     }
 
-//    public List<Person> getAll(){
-//        return personRepository.getAll();
-//    }
-
     public Person save(Person person){
         return personRepository.save(person);
     }
 
     public Optional<Person> findById(UUID id){
-        return Optional.of(personRepository.getReferenceById(id));
+        return personRepository.findById(id);
+    }
+
+    public List<Person> findAll(){
+        return personRepository.findAll();
+    }
+
+    public Person addOne(Person person){
+        return personRepository.save(person);
     }
 
     public boolean delete(UUID id){
@@ -36,4 +41,6 @@ public class PersonService {
             return true;
         }).orElse(false);
     }
+
+
 }

@@ -1,6 +1,7 @@
 package com.ortegafran.peoplemanager.Model.Entities;
 
 
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.Column;
@@ -10,13 +11,13 @@ import javax.persistence.Table;
 import java.util.UUID;
 
 @Entity
-@Table(name = "Person")
+@Table(name = "people")
 public class Person {
 
     @Id
-    @Column(name = "id")
-    @Type(type = "uuid-char")
-    private UUID id= UUID.randomUUID();
+    @Column(name = "id",columnDefinition = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid4")
+    private UUID id = UUID.randomUUID();
 
     @Column(name="dni")
     private String dni;
@@ -24,11 +25,28 @@ public class Person {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "firstLastName")
+    @Column(name = "firstlastname")
     private String firstLastName;
 
-    @Column(name = "secondLastName")
+    @Column(name = "secondlastname")
     private String secondLastName;
+
+    public Person(){}
+
+    public Person(String dni, String name, String firstLastName, String secondLastName) {
+        this.dni = dni;
+        this.name = name;
+        this.firstLastName = firstLastName;
+        this.secondLastName = secondLastName;
+    }
+
+    public Person(UUID id, String dni, String name, String firstLastName, String secondLastName) {
+        this.id = id;
+        this.dni = dni;
+        this.name = name;
+        this.firstLastName = firstLastName;
+        this.secondLastName = secondLastName;
+    }
 
     public UUID getId() {
         return id;
@@ -68,5 +86,16 @@ public class Person {
 
     public void setSecondLastName(String secondLastName) {
         this.secondLastName = secondLastName;
+    }
+
+    @Override
+    public String toString() {
+        return "Person{ " +
+                "id='" + id.toString() + '\'' +
+                ", dni='" + dni + '\'' +
+                ", name='" + name + '\'' +
+                ", firstLastName='" + firstLastName + '\'' +
+                ", secondLastName='" + secondLastName + '\'' +
+                '}';
     }
 }

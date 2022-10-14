@@ -8,6 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -97,5 +98,18 @@ public class Person {
                 ", firstLastName='" + firstLastName + '\'' +
                 ", secondLastName='" + secondLastName + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Person person = (Person) o;
+        return dni.equals(person.dni) && name.equals(person.name) && firstLastName.equals(person.firstLastName) && Objects.equals(secondLastName, person.secondLastName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(dni, name, firstLastName, secondLastName);
     }
 }

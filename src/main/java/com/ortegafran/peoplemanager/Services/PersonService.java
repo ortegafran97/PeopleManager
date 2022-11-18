@@ -36,7 +36,10 @@ public class PersonService {
     }
 
     public Person addOne(Person person){
-        return personRepository.save(person);
+        Optional<Person> search = findByDni(person.getDni());
+
+        if(search.isEmpty()) return personRepository.save(person);
+        else return null;
     }
 
     public boolean delete(UUID id){

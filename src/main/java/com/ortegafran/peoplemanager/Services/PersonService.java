@@ -27,6 +27,10 @@ public class PersonService {
         return personRepository.findById(id);
     }
 
+    public Optional<Person> findByDni(String dni){
+        return personRepository.findByDni(dni);
+    }
+
     public List<Person> findAll(){
         return personRepository.findAll();
     }

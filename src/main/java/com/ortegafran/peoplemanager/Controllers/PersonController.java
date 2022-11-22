@@ -38,7 +38,13 @@ public class PersonController {
 
     @PostMapping("")
     public ResponseEntity<Person> saveOne(@RequestBody Person person){
-        return ResponseEntity.ok(personService.addOne(person));
+        Optional<Person> response = personService.addOne(person);
+
+        if(response.isPresent())
+            return ResponseEntity.ok(response.get());
+        else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @PutMapping("/{id}")

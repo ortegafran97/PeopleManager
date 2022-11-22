@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class PersonService {
@@ -24,22 +25,44 @@ public class PersonService {
     }
 
     public Optional<Person> findById(UUID id){
-        return personRepository.findById(id);
+        List<Person> list = personRepository
+                .findAll().stream()
+                .filter(person -> person.getId()==id)
+                .collect(Collectors.toList());
+
+        if(list.stream().count()>0) {
+            return list.stream().findFirst();
+        }
+        else {
+            return Optional.empty();
+        }
     }
 
     public Optional<Person> findByDni(String dni){
-        return personRepository.findByDni(dni);
+        List<Person> list = personRepository
+                .findAll().stream()
+                .filter(person -> person.getDni()==dni)
+                .collect(Collectors.toList());
+
+        if(list.stream().count()>0) {
+            return list.stream().findFirst();
+        }
+        else {
+            return Optional.empty();
+        }
     }
 
     public List<Person> findAll(){
         return personRepository.findAll();
     }
 
-    public Person addOne(Person person){
+    public Optional<Person> addOne(Person person){
         Optional<Person> search = findByDni(person.getDni());
 
-        if(search.isEmpty()) return personRepository.save(person);
-        else return null;
+        if(search.isEmpty()) {
+            return Optional.of(personRepository.save(person));
+        }
+        return Optional.empty();
     }
 
     public boolean delete(UUID id){

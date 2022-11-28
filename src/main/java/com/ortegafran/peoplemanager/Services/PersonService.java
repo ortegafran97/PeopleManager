@@ -1,8 +1,8 @@
 package com.ortegafran.peoplemanager.Services;
 
 import com.ortegafran.peoplemanager.Model.Entities.Person;
+import com.ortegafran.peoplemanager.Model.Entities.Residency;
 import com.ortegafran.peoplemanager.Model.Repositories.PersonRepository;
-import org.hibernate.type.UUIDCharType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,9 +16,14 @@ public class PersonService {
     @Autowired
     private final PersonRepository personRepository;
 
-    public PersonService(PersonRepository personRepository) {
+    @Autowired
+    private final ResidencyService residencyService;
+
+    public PersonService(PersonRepository personRepository, ResidencyService residencyService) {
         this.personRepository = personRepository;
+        this.residencyService = residencyService;
     }
+
 
     public Person save(Person person){
         return personRepository.save(person);
@@ -27,7 +32,7 @@ public class PersonService {
     public Optional<Person> findById(UUID id){
         List<Person> list = personRepository
                 .findAll().stream()
-                .filter(person -> person.getId()==id)
+                .filter(person -> person.getId().equals(id))
                 .collect(Collectors.toList());
 
         if(list.stream().count()>0) {
@@ -41,7 +46,7 @@ public class PersonService {
     public Optional<Person> findByDni(String dni){
         List<Person> list = personRepository
                 .findAll().stream()
-                .filter(person -> person.getDni()==dni)
+                .filter(person -> person.getDni().equals(dni))
                 .collect(Collectors.toList());
 
         if(list.stream().count()>0) {
@@ -59,10 +64,11 @@ public class PersonService {
     public Optional<Person> addOne(Person person){
         Optional<Person> search = findByDni(person.getDni());
 
-        if(search.isEmpty()) {
-            return Optional.of(personRepository.save(person));
+        if(search.isPresent()) {
+            return Optional.empty();
         }
-        return Optional.empty();
+
+        return Optional.of(personRepository.save(person));
     }
 
     public boolean delete(UUID id){
@@ -72,5 +78,16 @@ public class PersonService {
         }).orElse(false);
     }
 
+    public Optional<Person> updateResidency(UUID personId, Residency residency){
+        Optional<Person> person = findById(personId);
+
+        if(person.isEmpty())
+            return Optional.empty();
+
+        person.get().setResidency(residency);
+
+        return Optional.of(save(person.get()));
+
+    }
 
 }

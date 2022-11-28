@@ -4,10 +4,7 @@ package com.ortegafran.peoplemanager.Model.Entities;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -18,7 +15,7 @@ public class Person {
     @Id
     @Column(name = "id",columnDefinition = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid4")
-    private UUID id = UUID.randomUUID();
+    private UUID id;
 
     @Column(name="dni")
     private String dni;
@@ -32,21 +29,30 @@ public class Person {
     @Column(name = "secondlastname")
     private String secondLastName;
 
-    public Person(){}
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "residency_id", referencedColumnName = "id",insertable = true)
+    private Residency residency;
 
-    public Person(String dni, String name, String firstLastName, String secondLastName) {
+
+    public Person(){
+        this.id = UUID.randomUUID();
+    }
+
+    public Person(UUID id, String dni, String name, String firstLastName, String secondLastName,Residency residency) {
+        this.id = id;
         this.dni = dni;
         this.name = name;
         this.firstLastName = firstLastName;
         this.secondLastName = secondLastName;
     }
 
-    public Person(UUID id, String dni, String name, String firstLastName, String secondLastName) {
-        this.id = id;
+    public Person(String dni, String name, String firstLastName, String secondLastName, Residency residency) {
+        this.id = UUID.randomUUID();
         this.dni = dni;
         this.name = name;
         this.firstLastName = firstLastName;
         this.secondLastName = secondLastName;
+        this.residency = residency;
     }
 
     public UUID getId() {
@@ -87,6 +93,14 @@ public class Person {
 
     public void setSecondLastName(String secondLastName) {
         this.secondLastName = secondLastName;
+    }
+
+    public Residency getResidency() {
+        return residency;
+    }
+
+    public void setResidency(Residency residency) {
+        this.residency = residency;
     }
 
     @Override

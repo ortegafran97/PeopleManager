@@ -2,9 +2,9 @@ package com.ortegafran.peoplemanager.Model.Entities;
 
 
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -13,7 +13,7 @@ import java.util.UUID;
 public class Person {
 
     @Id
-    @Column(name = "id",columnDefinition = "uuid")
+    @Column(name = "id_people",columnDefinition = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid4")
     private UUID id;
 
@@ -30,9 +30,11 @@ public class Person {
     private String secondLastName;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "residency_id", referencedColumnName = "id",insertable = true)
+    @JoinColumn(name = "residency_id", referencedColumnName = "id", insertable = true, updatable = true)
     private Residency residency;
 
+    @OneToMany(mappedBy = "person")
+    private List<JobRecord> jobsRecord;
 
     public Person(){
         this.id = UUID.randomUUID();
@@ -44,6 +46,7 @@ public class Person {
         this.name = name;
         this.firstLastName = firstLastName;
         this.secondLastName = secondLastName;
+        this.residency = residency;
     }
 
     public Person(String dni, String name, String firstLastName, String secondLastName, Residency residency) {
@@ -53,6 +56,14 @@ public class Person {
         this.firstLastName = firstLastName;
         this.secondLastName = secondLastName;
         this.residency = residency;
+    }
+
+    public Person(UUID id, String dni, String name, String firstLastName, String secondLastName) {
+        this.id = id;
+        this.dni = dni;
+        this.name = name;
+        this.firstLastName = firstLastName;
+        this.secondLastName = secondLastName;
     }
 
     public UUID getId() {
@@ -119,11 +130,11 @@ public class Person {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Person person = (Person) o;
-        return dni.equals(person.dni) && name.equals(person.name) && firstLastName.equals(person.firstLastName) && Objects.equals(secondLastName, person.secondLastName);
+        return Objects.equals(id, person.id) && dni.equals(person.dni) && name.equals(person.name) && firstLastName.equals(person.firstLastName) && Objects.equals(secondLastName, person.secondLastName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(dni, name, firstLastName, secondLastName);
+        return Objects.hash(id, dni, name, firstLastName, secondLastName);
     }
 }

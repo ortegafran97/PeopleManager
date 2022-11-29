@@ -9,11 +9,22 @@ CREATE TABLE residency(
 );
 
 CREATE TABLE people(
-    id uuid UNIQUE PRIMARY KEY,
+    id_people uuid UNIQUE PRIMARY KEY,
     dni varchar(12) not null,
     name varchar(50) not null,
     firstlastname varchar(50) not null,
     secondlastname varchar(50),
     residency_id uuid,
     FOREIGN KEY (residency_id) REFERENCES residency(id)
+);
+
+CREATE TABLE job(
+    id_job uuid UNIQUE PRIMARY KEY,
+    role varchar(100) not null,
+    enterprise varchar(100) not null,
+    start_date date not null,
+    end_date date,
+    id_people uuid not null,
+
+    FOREIGN KEY (id_people) REFERENCES people(id_people)
 );

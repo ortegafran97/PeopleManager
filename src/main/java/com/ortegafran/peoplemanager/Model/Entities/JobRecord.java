@@ -1,5 +1,7 @@
 package com.ortegafran.peoplemanager.Model.Entities;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -9,10 +11,16 @@ import java.util.UUID;
 
 @Entity
 @Table(name="job")
+@Data
+@AllArgsConstructor
 public class JobRecord {
     @Id
     @Column(name="id_job",columnDefinition = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid4")
+    @GeneratedValue
+    @GenericGenerator(
+            name = "uuid",
+            strategy = "org.hibernate.id.UUIDGenerator"
+    )
     private UUID id = UUID.randomUUID();
     private String role;
     private String enterprise;
@@ -25,9 +33,8 @@ public class JobRecord {
     @JoinColumn(name="person_id",nullable = false)
     private Person person;
 
-    public JobRecord() {
-        this.id = UUID.randomUUID();
-    }
+    public JobRecord(){}
+
     public UUID getId() {
         return id;
     }

@@ -67,8 +67,22 @@ public class PersonService {
         if(search.isPresent()) {
             return Optional.empty();
         }
+        Person p=person;
 
-        return Optional.of(personRepository.save(person));
+        p.setId(search.get().getId());
+        return Optional.of(personRepository.save(p));
+    }
+
+    public Optional<Person> updatePerson(Person person){
+        Optional<Person> p = findById(person.getId());
+
+        if(p.isEmpty())
+            return Optional.empty();
+
+        Person updated = person;
+        updated.setId(person.getId());
+
+        return Optional.of(personRepository.save(updated));
     }
 
     public boolean delete(UUID id){
@@ -81,13 +95,19 @@ public class PersonService {
     public Optional<Person> updateResidency(UUID personId, Residency residency){
         Optional<Person> person = findById(personId);
 
-        if(person.isEmpty())
-            return Optional.empty();
+        if(person.isEmpty()) return Optional.empty();
 
-        person.get().setResidency(residency);
+        Residency old = person.get().getResidency();
+        UUID idRes = old.getId();
 
-        return Optional.of(save(person.get()));
+        if(idRes.equals(null)) residencyService.addOne(residency);
+        else{
+            residency.setId(idRes);
+            person.get().setResidency(residencyService.updateOne(residency).get());
+            personRepository.save(person.get());
+        }
 
+
+        return Optional.of(findById(personId).get());
     }
-
 }

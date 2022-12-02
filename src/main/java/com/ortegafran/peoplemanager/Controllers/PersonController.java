@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -19,8 +18,6 @@ import java.util.UUID;
 @RequestMapping("/people")
 public class PersonController {
     Logger logger = LoggerFactory.getLogger(PersonController.class);
-
-
 
     @Autowired
     private final PersonService personService;

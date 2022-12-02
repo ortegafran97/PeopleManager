@@ -1,6 +1,7 @@
 package com.ortegafran.peoplemanager.Model.Entities;
 
 
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -10,11 +11,17 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "people")
+@Data
+@AllArgsConstructor
 public class Person {
 
     @Id
     @Column(name = "id_people",columnDefinition = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid4")
+    @GeneratedValue
+    @GenericGenerator(
+            name = "uuid",
+            strategy = "org.hibernate.id.UUIDGenerator"
+    )
     private UUID id;
 
     @Column(name="dni")
@@ -37,7 +44,7 @@ public class Person {
     private List<JobRecord> jobsRecord;
 
     public Person(){
-        this.id = UUID.randomUUID();
+        id = UUID.randomUUID();
     }
 
     public Person(UUID id, String dni, String name, String firstLastName, String secondLastName,Residency residency) {

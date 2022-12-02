@@ -40,16 +40,6 @@ public class Residency {
         this.id = UUID.randomUUID();
     }
 
-    public Residency(UUID id, String street, String between_street_1, String between_street_2, int numeration, String orientation, String comment) {
-        this.id = id;
-        this.street = street;
-        this.between_street_1 = between_street_1;
-        this.between_street_2 = between_street_2;
-        this.numeration = numeration;
-        this.orientation = orientation;
-        this.comment = comment;
-    }
-
     public Residency(String street, String between_street_1, String between_street_2, int numeration, String orientation, String comment) {
         this.id = UUID.randomUUID();
         this.street = street;
@@ -115,7 +105,6 @@ public class Residency {
     public void setComment(String comment) {
         this.comment = comment;
     }
-
 
     @Override
     public String toString() {

@@ -20,6 +20,22 @@ public class JobRecordService {
     @Autowired
     PersonService personService;
 
+    public Optional<JobRecord> findOne(UUID idJob){
+        return recordRepository.findById(idJob);
+    }
+
+    public List<Person> findEmployees(String enterprise){
+        return recordRepository.findByEnterprise(enterprise);
+    }
+
+    public List<JobRecord> findByPerson(UUID idPerson){
+        Optional<Person> person = personService.findById(idPerson);
+
+        if(person.isEmpty()) return List.of();
+
+        return recordRepository.findByPerson(person.get());
+    }
+
     public Optional<JobRecord> addOne(UUID idPerson, JobRecord job){
         //TODO: check dates
         Optional<Person> person = personService.findById(idPerson);
@@ -41,5 +57,16 @@ public class JobRecordService {
 
     public List<JobRecord> findAll(){
         return recordRepository.findAll();
+    }
+
+    public Boolean deleteOne(UUID id){
+        Optional<JobRecord> job = findOne(id);
+        if(job.isEmpty()) return false;
+
+        recordRepository.deleteById(job.get().getId());
+
+        return recordRepository
+                .findById(id)
+                .isEmpty();
     }
 }

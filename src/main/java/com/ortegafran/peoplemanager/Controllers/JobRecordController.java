@@ -14,7 +14,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/job")
+@RequestMapping("/jobrecord")
 public class JobRecordController {
     Logger logger = LoggerFactory.getLogger(JobRecordController.class);
     @Autowired
@@ -24,9 +24,14 @@ public class JobRecordController {
         this.jobRecordService = jobRecordService;
     }
 
-    @PostMapping(value="{id}")
+    @GetMapping(value="/all")
+    public ResponseEntity<List<JobRecord>> listAll(){
+        return new ResponseEntity<>(jobRecordService.findAll(),HttpStatus.OK);
+    }
+
+    @PostMapping(value= "{id}")
     public ResponseEntity<Optional<JobRecord>> addJob(@PathVariable UUID id, @RequestBody JobRecord job){
-        logger.info("Adding new Job Record for {} id.",id);
+        logger.info("Adding new Job Record for {} person.",id);
         Optional<JobRecord> jobRecord = jobRecordService.addOne(id,job);
 
         if(jobRecord.isEmpty()) {
@@ -36,9 +41,21 @@ public class JobRecordController {
         return new ResponseEntity<>(jobRecord, HttpStatus.ACCEPTED);
     }
 
-    @GetMapping(value="/all")
-    public ResponseEntity<List<JobRecord>> listAll(){
-        return new ResponseEntity<>(jobRecordService.findAll(),HttpStatus.OK);
+    @GetMapping(value= "/person/{id}")
+    public ResponseEntity<List<JobRecord>> findPersonJobs(@PathVariable("id") UUID id){
+        List<JobRecord> jobs = jobRecordService.findByPerson(id);
+
+        return new ResponseEntity<>(jobs,HttpStatus.OK);
+    }
+
+    @DeleteMapping(value="/{id}")
+    public ResponseEntity<Boolean> deleteJob(@PathVariable("id") UUID idJob){
+        return new ResponseEntity<>(jobRecordService.deleteOne(idJob),HttpStatus.OK);
+    }
+
+    @PutMapping(value="/id")
+    public ResponseEntity<Optional<JobRecord>> editJob(@PathVariable("id") UUID idJob, @RequestBody JobRecord jobRecord){
+        return new ResponseEntity<>(jobRecordService.editJob(jobRecord),HttpStatus.OK);
     }
 
 }

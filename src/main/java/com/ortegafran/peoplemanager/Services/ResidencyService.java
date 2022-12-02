@@ -19,6 +19,14 @@ public class ResidencyService {
 
     public Optional<Residency> addOne(Residency residency){
         return Optional.of(residencyRepository.save(residency));
+    }
+
+    public Optional<Residency> updateOne(Residency residency){
+        Optional<Residency> r = residencyRepository.findById(residency.getId());
+
+        if(r.isEmpty()) return Optional.empty();
+
+        return Optional.of(residencyRepository.save(residency));
 
     }
 }

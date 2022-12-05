@@ -63,14 +63,10 @@ public class PersonService {
 
     public Optional<Person> addOne(Person person){
         Optional<Person> search = findByDni(person.getDni());
-
         if(search.isPresent()) {
             return Optional.empty();
         }
-        Person p=person;
-
-        p.setId(search.get().getId());
-        return Optional.of(personRepository.save(p));
+        return Optional.of(personRepository.save(person));
     }
 
     public Optional<Person> updatePerson(Person person){
